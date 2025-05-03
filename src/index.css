@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #000000;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --radius: 0.5rem;
+  --font-sans: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 41 100% 63%;
+    --card: 0 0% 5%;
+    --card-foreground: 41 100% 65%;
+    --popover: 0 0% 3%;
+    --popover-foreground: 41 100% 63%;
+    --primary: 41 100% 63%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 41 100% 65%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 41 40% 60%;
+    --accent: 0 65% 58%;
+    --accent-foreground: 41 100% 63%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 41 100% 63%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 41 100% 63%;
+    --chart-1: 41 100% 63%;
+    --chart-2: 272 65% 67%;
+    --chart-3: 0 65% 58%;
+    --chart-4: 152 62% 40%;
+    --chart-5: 42 93% 58%;
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 41 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 65% 58%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 41 100% 50%;
+    --chart-1: 41 100% 50%;
+    --chart-2: 272 65% 55%;
+    --chart-3: 0 65% 58%;
+    --chart-4: 152 62% 40%;
+    --chart-5: 42 93% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+    line-height: 1.2;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+  
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+  
+  a {
+    @apply text-primary hover:text-primary/90 transition-colors;
+  }
+}
+
+/* Custom AvalCreator styles */
+@layer components {
+  .gold-gradient {
+    @apply bg-gradient-to-r from-gold-400 to-gold-600;
+  }
+  
+  .avalanche-gradient {
+    @apply bg-gradient-to-r from-avalanche-500 to-avalanche-700;
+  }
+  
+  .web3-gradient {
+    @apply bg-gradient-to-r from-web3-500 to-web3-700;
+  }
+  
+  .impact-gradient {
+    @apply bg-gradient-to-r from-impact-500 to-impact-700;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1;
+  }
+  
+  .dashboard-layout {
+    @apply grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+}
