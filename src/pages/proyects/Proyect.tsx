@@ -192,25 +192,25 @@ const ProjectDetail = () => {
       });
       return;
     }
-    
+
     setOpenPurchaseDialog(true);
   };
 
   // Procesar la compra
   const processPurchase = async () => {
     if (!project) return;
-    
+
     setIsPurchasing(true);
-    
+
     try {
       // En una implementación real, aquí se llamaría al smart contract
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simular transacción
-      
+
       toast({
         title: "Compra exitosa",
         description: `Has adquirido el proyecto NFT '${project.title}' por ${project.price} AVAX`,
       });
-      
+
       setOpenPurchaseDialog(false);
     } catch (error) {
       toast({
@@ -251,9 +251,9 @@ const ProjectDetail = () => {
   return (
     <div className="space-y-8">
       {/* Botón de regreso */}
-      <Button 
-        variant="ghost" 
-        size="sm" 
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => navigate('/projects')}
         className="mb-4"
       >
@@ -265,9 +265,9 @@ const ProjectDetail = () => {
       <div className="grid gap-6 md:grid-cols-3">
         <div className="md:col-span-2">
           <div className="relative rounded-lg overflow-hidden aspect-video mb-4">
-            <img 
-              src={project.thumbnail} 
-              alt={project.title} 
+            <img
+              src={project.thumbnail}
+              alt={project.title}
               className="w-full h-full object-cover"
             />
             <div className="absolute top-2 left-2">
@@ -276,22 +276,22 @@ const ProjectDetail = () => {
               </div>
             </div>
           </div>
-          
+
           <h1 className="text-3xl font-bold tracking-tight">{project.title}</h1>
           <p className="text-muted-foreground mt-2 mb-4">{project.description}</p>
-          
+
           <div className="flex flex-wrap gap-2 mb-4">
             {project.tags.map((tag) => (
-              <Badge 
-                key={tag} 
-                variant="outline" 
+              <Badge
+                key={tag}
+                variant="outline"
                 className="text-xs py-0.5 px-2"
               >
                 {tag}
               </Badge>
             ))}
           </div>
-          
+
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center">
               <User className="h-5 w-5" />
@@ -306,7 +306,7 @@ const ProjectDetail = () => {
             </div>
           </div>
         </div>
-        
+
         <div>
           <Card>
             <CardHeader>
@@ -319,7 +319,7 @@ const ProjectDetail = () => {
                   <p className="text-sm text-muted-foreground">Precio del proyecto NFT</p>
                 </div>
               </div>
-              
+
               <div className="space-y-2 pt-2 text-sm">
                 <p>Al comprar este NFT, adquieres:</p>
                 <ul className="list-disc pl-5 space-y-1">
@@ -328,10 +328,10 @@ const ProjectDetail = () => {
                   <li>Posibilidad de reventa</li>
                 </ul>
               </div>
-              
+
               <div className="space-y-2 pt-2">
-                <Button 
-                  onClick={handlePurchase} 
+                <Button
+                  onClick={handlePurchase}
                   className="w-full bg-gold-500 hover:bg-gold-600 text-black"
                 >
                   <ShoppingCart className="mr-2 h-4 w-4" />
@@ -360,16 +360,16 @@ const ProjectDetail = () => {
                   {project.longDescription}
                 </div>
               </div>
-              
+
               {project.links && project.links.length > 0 && (
                 <div className="mt-6 space-y-2">
                   <h3 className="text-lg font-semibold">Enlaces</h3>
                   <div className="space-y-2">
                     {project.links.map((link, index) => (
-                      <a 
+                      <a
                         key={index}
-                        href={link.url} 
-                        target="_blank" 
+                        href={link.url}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-primary hover:underline"
                       >
@@ -383,7 +383,7 @@ const ProjectDetail = () => {
               )}
             </CardContent>
           </Card>
-          
+
           {project.creatorInfo && (
             <Card className="mt-4">
               <CardHeader>
@@ -401,7 +401,7 @@ const ProjectDetail = () => {
             </Card>
           )}
         </div>
-        
+
         <div className="md:block">
           <Card className="mt-4 md:mt-0">
             <CardHeader>
@@ -427,7 +427,7 @@ const ProjectDetail = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="p-3 rounded-md bg-muted/40 border">
                 <p className="text-sm text-muted-foreground text-center">
                   Este NFT está alojado en la blockchain de Avalanche, garantizando su autenticidad y propiedad digital.
@@ -447,40 +447,56 @@ const ProjectDetail = () => {
               {`Estás a punto de comprar "${project.title}" como NFT`}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="py-4">
             <div className="space-y-4">
-              <div className="flex flex-col gap-2 p-4 rounded-md border">
+              <div className="flex flex-col gap-2 p-4 rounded-md border bg-muted/5">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">Proyecto:</span>
-                  <span>{project.title.substring(0, 25)}...</span>
+                  <span className="font-medium">Contrato:</span>
+                  <span className="font-mono text-sm text-avalanche-500">
+                    {project.id}...{project.id.slice(-4)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">Creador:</span>
-                  <span>{project.creator}</span>
+                  <span className="font-medium">Estándar:</span>
+                  <span className="text-sm text-web3-500">ARC-721</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">Precio:</span>
+                  <span className="font-medium">Blockchain:</span>
+                  <div className="flex items-center gap-1 text-sm">
+                    <span className="text-avalanche-500">Avalanche</span>
+                    <span>• C-Chain</span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Tarifa Red:</span>
+                  <span className="text-sm text-muted-foreground">~0.001 AVAX</span>
+                </div>
+                <div className="flex justify-between items-center pt-2">
+                  <span className="font-medium">Total Estimado:</span>
                   <span className="text-xl font-bold text-gold-500">
-                    {project.price} AVAX
+                    {(project.price + 0.001).toFixed(3)} AVAX
                   </span>
                 </div>
               </div>
-              
-              <div className="text-sm text-muted-foreground">
-                <p>Al comprar este NFT, adquieres la propiedad digital del proyecto. Esta transacción quedará registrada en la blockchain de Avalanche.</p>
+
+              <div className="text-sm text-muted-foreground p-2 border rounded-md bg-muted/10">
+                <p className="flex items-center gap-2">
+                  <span>⚠️</span>
+                  Transacción irreversible - Verifica todos los detalles antes de confirmar
+                </p>
               </div>
             </div>
           </div>
-          
+
           <DialogFooter>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setOpenPurchaseDialog(false)}
             >
               Cancelar
             </Button>
-            <Button 
+            <Button
               onClick={processPurchase}
               disabled={isPurchasing}
               className="bg-gold-500 hover:bg-gold-600 text-black"

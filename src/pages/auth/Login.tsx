@@ -146,7 +146,7 @@ const Login = () => {
               )}
             </Button>
             
-            <div className="relative my-6">
+            {/* <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
               </div>
@@ -155,9 +155,9 @@ const Login = () => {
                   Or continue with
                 </span>
               </div>
-            </div>
+            </div> */}
             
-            <div className="grid grid-cols-2 gap-4">
+            {/* <div className="grid grid-cols-2 gap-4">
               <Button variant="outline" type="button" className="w-full">
                 <img 
                   src="https://developers.google.com/identity/images/g-logo.png" 
@@ -174,7 +174,7 @@ const Login = () => {
                 />
                 Discord
               </Button>
-            </div>
+            </div> */}
             
             <div className="mt-6 text-center text-sm">
               Don't have an account?{' '}

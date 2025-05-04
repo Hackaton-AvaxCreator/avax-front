@@ -301,31 +301,76 @@ const Projects = () => {
           </DialogHeader>
           
           <div className="py-4">
-            {selectedProject && (
-              <div className="space-y-4">
-                <div className="flex flex-col gap-2 p-4 rounded-md border">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Proyecto:</span>
-                    <span>{selectedProject.title}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Creador:</span>
-                    <span>{selectedProject.creator}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Precio:</span>
-                    <span className="text-xl font-bold text-gold-500">
-                      {selectedProject.price} AVAX
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="text-sm text-muted-foreground">
-                  <p>Al comprar este NFT, adquieres la propiedad digital del proyecto. Esta transacción quedará registrada en la blockchain de Avalanche.</p>
-                </div>
-              </div>
-            )}
+  {selectedProject && (
+    <div className="space-y-4">
+      <div className="flex flex-col gap-3 p-4 rounded-md border bg-muted/5">
+        {/* Información Básica */}
+        <div className="flex justify-between items-center">
+          <span className="font-medium">Contrato Inteligente:</span>
+          <span className="font-mono text-sm text-avalanche-500">
+            {selectedProject.id}...{selectedProject.id.slice(-4)}
+          </span>
+        </div>
+        
+        <div className="flex justify-between items-center">
+          <span className="font-medium">Estándar Token:</span>
+          <Badge variant="outline" className="text-web3-500">
+            ARC-721
+          </Badge>
+        </div>
+
+        {/* Detalles de Transacción */}
+        <div className="grid grid-cols-2 gap-4 pt-2">
+          <div className="space-y-1">
+            <span className="text-sm text-muted-foreground">Precio NFT:</span>
+            <div className="text-xl font-bold text-gold-500">
+              {selectedProject.price} AVAX
+            </div>
+            <span className="text-xs text-muted-foreground">
+              ≈ ${(selectedProject.price * 34.50).toFixed(2)}
+            </span>
           </div>
+          
+          <div className="space-y-1">
+            <span className="text-sm text-muted-foreground">Tarifa Gas:</span>
+            <div className="text-lg font-semibold">
+              0.001 AVAX
+            </div>
+            <span className="text-xs text-muted-foreground">
+              ≈ $0.03
+            </span>
+          </div>
+        </div>
+
+        {/* Total */}
+        <div className="pt-2 border-t">
+          <div className="flex justify-between items-center">
+            <span className="font-medium">Total:</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-bold text-avalanche-500">
+                {(selectedProject.price + 0.001).toFixed(3)} AVAX
+              </span>
+              <span className="text-sm text-muted-foreground">
+                ≈ ${((selectedProject.price + 0.001) * 34.50).toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Advertencia Blockchain */}
+      <div className="text-sm text-muted-foreground p-3 rounded-md bg-yellow-50 dark:bg-yellow-900/20">
+        <div className="flex items-start gap-2">
+          <span>⚠️</span>
+          <p>
+            Las transacciones en blockchain son inmutables y permanentes. 
+            Verifica todos los detalles antes de confirmar.
+          </p>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
           
           <DialogFooter>
             <Button 
