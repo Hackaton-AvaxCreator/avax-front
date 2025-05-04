@@ -51,7 +51,7 @@ interface ProjectNFT {
 
 // Datos de ejemplo
 const mockProjectsNFT: ProjectNFT[] = [
-  {
+  /* {
     id: '1',
     title: 'Documental sobre Comunidades Indígenas',
     description: 'Un documental que explora las tradiciones y desafíos actuales de las comunidades indígenas en Colombia.',
@@ -83,7 +83,7 @@ const mockProjectsNFT: ProjectNFT[] = [
         url: 'https://instagram.com/mariafilms'
       }
     ]
-  },
+  }, */
   {
     id: '2',
     title: 'Álbum de Música Folklórica Experimental',

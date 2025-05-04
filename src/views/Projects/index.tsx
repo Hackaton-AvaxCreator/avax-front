@@ -40,7 +40,7 @@ interface ProjectNFT {
 
 // Datos de ejemplo
 const mockProjectsNFT: ProjectNFT[] = [
-  {
+  /* {
     id: '1',
     title: 'Documental sobre Comunidades Indígenas',
     description: 'Un documental que explora las tradiciones y desafíos actuales de las comunidades indígenas en Colombia.',
@@ -49,7 +49,7 @@ const mockProjectsNFT: ProjectNFT[] = [
     thumbnail: 'https://images.pexels.com/photos/7578536/pexels-photo-7578536.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
     price: 3200,
     tags: ['documental', 'cultura', 'indígena'],
-  },
+  }, */
   {
     id: '2',
     title: 'Álbum de Música Folklórica Experimental',
