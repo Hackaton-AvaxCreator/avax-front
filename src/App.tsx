@@ -16,6 +16,7 @@ const TokenManagement = lazy(() => import('./views/TokenManagement'));
 const SocialImpact = lazy(() => import('./views/SocialImpact'));
 const Analytics = lazy(() => import('./views/Analytics'));
 const Profile = lazy(() => import('./pages/profile/Profile'));
+const Projects = lazy(() => import('./views/Projects'));
 const Settings = lazy(() => import('./pages/settings/Settings'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
@@ -50,6 +51,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/creator-hub" element={<CreatorHub />} />
           <Route path="/token-management" element={<TokenManagement />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="/social-impact" element={<SocialImpact />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/profile" element={<Profile />} />
