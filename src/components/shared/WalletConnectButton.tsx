@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from '../ui/dialog';
 
-const WalletConnectButton = () => {
+const CoreWalletButton = () => {
   const { address, isConnected, isConnecting, connectWallet, disconnectWallet } = useWallet();
   const [showDialog, setShowDialog] = useState(false);
 
@@ -82,35 +82,14 @@ const WalletConnectButton = () => {
               <div className="flex items-center gap-3">
                 <div className="bg-gold-500/10 p-2 rounded-full">
                   <img 
-                    src="https://cdn.iconscout.com/icon/free/png-256/metamask-2728406-2261817.png" 
-                    alt="MetaMask" 
+                    src="https://play-lh.googleusercontent.com/MFzD0pEo2nLp2yv3U6YySJaINHtDBvbA7v5FuSoehbPA76t2LDXI2XiWbbHohf8fWq0=w480-h960-rw" 
+                    alt="Core" 
                     className="h-8 w-8" 
                   />
                 </div>
                 <div className="text-left">
-                  <div className="font-medium">MetaMask</div>
-                  <div className="text-xs text-muted-foreground">Connect to your MetaMask wallet</div>
-                </div>
-              </div>
-              <ExternalLink className="h-4 w-4 text-muted-foreground" />
-            </Button>
-            
-            <Button
-              variant="outline"
-              className="flex items-center justify-between p-4 h-auto border border-muted hover:border-gold-500/50"
-              onClick={confirmConnect}
-            >
-              <div className="flex items-center gap-3">
-                <div className="bg-gold-500/10 p-2 rounded-full">
-                  <img 
-                    src="https://walletconnect.com/walletconnect-logo.png" 
-                    alt="WalletConnect" 
-                    className="h-8 w-8" 
-                  />
-                </div>
-                <div className="text-left">
-                  <div className="font-medium">WalletConnect</div>
-                  <div className="text-xs text-muted-foreground">Connect using WalletConnect</div>
+                  <div className="font-medium">Core Wallet</div>
+                  <div className="text-xs text-muted-foreground">Connect to your Core Crypto wallet</div>
                 </div>
               </div>
               <ExternalLink className="h-4 w-4 text-muted-foreground" />
@@ -122,4 +101,4 @@ const WalletConnectButton = () => {
   );
 };
 
-export default WalletConnectButton;
+export default CoreWalletButton;

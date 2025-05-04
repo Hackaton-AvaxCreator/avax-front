@@ -90,7 +90,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     const checkConnection = async () => {
       try {
         // For MVP, we're just simulating wallet functions
-        // In production, this would use actual Web3 libraries like wagmi
+        // In production, this would use actual Web3 libraries and Core Wallet API
         const connectedWallet = localStorage.getItem('wallet_connected');
         
         if (connectedWallet === 'true') {
@@ -100,11 +100,15 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
             isSupported: true,
           };
           
+          // Generar una dirección de billetera simulada
+          const mockAddress = `0x${Array.from({ length: 40 }, () => 
+            Math.floor(Math.random() * 16).toString(16)).join('')}`;
+          
           dispatch({
             type: 'CONNECT_SUCCESS',
             payload: {
-              address: '0x1234567890abcdef1234567890abcdef12345678',
-              balance: '100.0',
+              address: mockAddress,
+              balance: (Math.random() * 100).toFixed(2),
               network: mockNetwork,
             },
           });
@@ -117,17 +121,22 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     checkConnection();
   }, []);
 
-  // Connect wallet function
+  // Connect wallet function - Simula conexión con Core Wallet
   const connectWallet = async () => {
     dispatch({ type: 'CONNECT_REQUEST' });
     
     try {
-      // Simulate wallet connection
+      // Simular conexión con Core Wallet
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock data
-      const address = '0x1234567890abcdef1234567890abcdef12345678';
-      const balance = '100.0';
+      // Generar una dirección de billetera aleatoria para simular
+      const randomAddress = `0x${Array.from({ length: 40 }, () => 
+        Math.floor(Math.random() * 16).toString(16)).join('')}`;
+      
+      // Simular balance aleatorio entre 1 y 100 AVAX
+      const randomBalance = (1 + Math.random() * 99).toFixed(2);
+      
+      // Red Avalanche C-Chain
       const network: Network = {
         id: 43114,
         name: 'Avalanche C-Chain',
@@ -138,13 +147,20 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       
       dispatch({
         type: 'CONNECT_SUCCESS',
-        payload: { address, balance, network },
+        payload: { 
+          address: randomAddress, 
+          balance: randomBalance, 
+          network 
+        },
       });
+      
+      console.log('Core Wallet connected successfully');
     } catch (error) {
       dispatch({
         type: 'CONNECT_FAILURE',
-        payload: 'Failed to connect wallet',
+        payload: 'Failed to connect Core Wallet',
       });
+      console.error('Failed to connect Core Wallet:', error);
     }
   };
 
@@ -152,15 +168,16 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const disconnectWallet = () => {
     localStorage.removeItem('wallet_connected');
     dispatch({ type: 'DISCONNECT' });
+    console.log('Core Wallet disconnected');
   };
 
-  // Switch network function
+  // Switch network function - For Avalanche networks
   const switchNetwork = async (networkId: number) => {
     try {
       // Simulate network switch
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Mock network data
+      // Mock network data - Only supporting Avalanche networks
       let networkData: Network;
       
       switch (networkId) {
@@ -187,6 +204,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
       }
       
       dispatch({ type: 'UPDATE_NETWORK', payload: networkData });
+      console.log(`Switched to network: ${networkData.name}`);
     } catch (error) {
       console.error('Failed to switch network:', error);
     }
