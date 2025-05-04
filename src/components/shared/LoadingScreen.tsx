@@ -31,7 +31,7 @@ const LoadingScreen = () => {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-6 text-lg font-medium text-gold-500"
         >
-          Loading AvalCreator
+          Loading AvaxCreator
         </motion.p>
         <motion.p
           initial={{ opacity: 0 }}

@@ -35,7 +35,7 @@ const es = {
       rememberMe: "Recordarme",
       signUp: "Crear cuenta",
       loginSuccess: "Inicio de sesión exitoso",
-      welcomeBack: "Bienvenido de nuevo a la Plataforma AvalCreator",
+      welcomeBack: "Bienvenido de nuevo a la Plataforma AvaxCreator",
       enterCredentials: "Ingresa tus credenciales para acceder a tu cuenta",
       orContinueWith: "O continúa con",
       noAccount: "¿No tienes una cuenta?",

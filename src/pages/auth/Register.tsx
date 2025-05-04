@@ -73,7 +73,7 @@ const Register = () => {
       
       toast({
         title: 'Registration successful',
-        description: 'Welcome to AvalCreator Platform! You can now log in.',
+        description: 'Welcome to AvaxCreator Platform! You can now log in.',
       });
       
       navigate('/');
@@ -209,14 +209,14 @@ const Register = () => {
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
+             {/*  <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
                   Or connect with wallet
                 </span>
-              </div>
+              </div> */}
             </div>
             
-            <div className="space-y-4">
+           {/*  <div className="space-y-4">
               <Button variant="outline" type="button" className="w-full">
                 <img 
                   src="https://cdn.iconscout.com/icon/free/png-256/metamask-2728406-2261817.png" 
@@ -225,7 +225,7 @@ const Register = () => {
                 />
                 Connect with MetaMask
               </Button>
-            </div>
+            </div> */}
             
             <div className="mt-6 text-center text-sm">
               Already have an account?{' '}

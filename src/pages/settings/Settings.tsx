@@ -185,7 +185,7 @@ const Settings = () => {
                 <CardHeader>
                   <CardTitle>Appearance</CardTitle>
                   <CardDescription>
-                    Customize how AvalCreator looks on your device
+                    Customize how AvaxCreator looks on your device
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">

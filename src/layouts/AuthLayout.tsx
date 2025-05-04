@@ -35,7 +35,7 @@ const AuthLayout = () => {
                 A
               </div>
             </motion.div>
-            <h1 className="text-3xl font-bold tracking-tight">AvalCreator</h1>
+            <h1 className="text-3xl font-bold tracking-tight">AvaxCreator</h1>
             <p className="text-muted-foreground mt-2">Empower your creativity on the Avalanche network</p>
           </div>
           

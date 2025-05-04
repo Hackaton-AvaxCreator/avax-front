@@ -111,7 +111,7 @@
   }
 }
 
-/* Custom AvalCreator styles */
+/* Custom AvaxCreator styles */
 @layer components {
   .gold-gradient {
     @apply bg-gradient-to-r from-gold-400 to-gold-600;

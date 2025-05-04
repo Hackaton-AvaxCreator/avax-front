@@ -54,7 +54,7 @@ const Login = () => {
       
       toast({
         title: 'Login successful',
-        description: 'Welcome back to AvalCreator Platform',
+        description: 'Welcome back to AvaxCreator Platform',
       });
       
       navigate('/');

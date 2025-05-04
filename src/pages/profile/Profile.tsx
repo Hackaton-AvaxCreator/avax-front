@@ -412,7 +412,7 @@ const Profile = () => {
                         </div>
                         <div>
                           <p className="font-medium">AVLC</p>
-                          <p className="text-xs text-muted-foreground">AvalCreator</p>
+                          <p className="text-xs text-muted-foreground">AvaxCreator</p>
                         </div>
                       </div>
                       <div className="text-right">

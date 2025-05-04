@@ -15,7 +15,7 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
-        // AvalCreator color system
+        // AvaxCreator color system
         avalanche: {
           DEFAULT: '#E84142', // Avalanche Red
           50: '#FEF2F2',

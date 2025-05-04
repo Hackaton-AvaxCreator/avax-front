@@ -57,7 +57,7 @@ const mockTokens = [
   },
   {
     id: '2',
-    name: 'AvalCreator',
+    name: 'AvaxCreator',
     symbol: 'AVLC',
     contractAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
     totalSupply: '500000',
@@ -484,7 +484,7 @@ const TokenManagement = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium">Token Created</p>
-                    <p className="text-sm text-muted-foreground">Created AvalCreator (AVLC) token</p>
+                    <p className="text-sm text-muted-foreground">Created AvaxCreator (AVLC) token</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">2 days ago</p>

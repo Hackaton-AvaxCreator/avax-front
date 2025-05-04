@@ -81,7 +81,7 @@ const DashboardLayout = () => {
               <div className="h-8 w-8 bg-gold-500 text-black rounded-full flex items-center justify-center text-lg font-bold">
                 A
               </div>
-              <span className="font-bold text-xl hidden sm:inline-block">AvalCreator</span>
+              <span className="font-bold text-xl hidden sm:inline-block">AvaxCreator</span>
             </Link>
           </div>
           
@@ -233,7 +233,7 @@ const DashboardLayout = () => {
                     <div className="h-8 w-8 bg-gold-500 text-black rounded-full flex items-center justify-center text-lg font-bold">
                       A
                     </div>
-                    <span className="font-bold text-xl">AvalCreator</span>
+                    <span className="font-bold text-xl">AvaxCreator</span>
                   </Link>
                   <button
                     type="button"

@@ -35,7 +35,7 @@ const en = {
       rememberMe: "Remember me",
       signUp: "Sign up",
       loginSuccess: "Login successful",
-      welcomeBack: "Welcome back to AvalCreator Platform",
+      welcomeBack: "Welcome back to AvaxCreator Platform",
       enterCredentials: "Enter your credentials to access your account",
       orContinueWith: "Or continue with",
       noAccount: "Don't have an account?",
