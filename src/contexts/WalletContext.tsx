@@ -1,16 +1,22 @@
-import { createContext, useContext, useEffect, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { Network, WalletState } from '../types';
+import walletService from '../services/walletService';
+import { ethers } from 'ethers';
 
-// Define action types
-type WalletAction =
-  | { type: 'CONNECT_REQUEST' }
-  | { type: 'CONNECT_SUCCESS'; payload: { address: string; balance: string; network: Network } }
-  | { type: 'CONNECT_FAILURE'; payload: string }
-  | { type: 'DISCONNECT' }
-  | { type: 'UPDATE_BALANCE'; payload: string }
-  | { type: 'UPDATE_NETWORK'; payload: Network };
+interface WalletContextType {
+  address: string | null;
+  balance: string | null;
+  network: Network | null;
+  isConnecting: boolean;
+  isConnected: boolean;
+  error: string | null;
+  connectWallet: () => void;
+  disconnectWallet: () => void;
+  switchNetwork: (networkId: number) => void;
+}
 
-// Define initial state
+const WalletContext = createContext<WalletContextType | undefined>(undefined);
+
 const initialState: WalletState = {
   address: null,
   balance: null,
@@ -20,212 +26,151 @@ const initialState: WalletState = {
   error: null,
 };
 
-// Create reducer function
-const walletReducer = (state: WalletState, action: WalletAction): WalletState => {
+const walletReducer = (state: WalletState, action: any): WalletState => {
   switch (action.type) {
-    case 'CONNECT_REQUEST':
+    case 'CONNECT_WALLET':
+      return { ...state, isConnecting: true, error: null };
+    case 'SET_WALLET':
       return {
         ...state,
-        isConnecting: true,
-        error: null,
-      };
-    
-    case 'CONNECT_SUCCESS':
-      return {
-        ...state,
+        isConnecting: false,
+        isConnected: true,
         address: action.payload.address,
         balance: action.payload.balance,
         network: action.payload.network,
-        isConnecting: false,
-        isConnected: true,
-        error: null,
       };
-    
-    case 'CONNECT_FAILURE':
-      return {
-        ...state,
-        isConnecting: false,
-        isConnected: false,
-        error: action.payload,
-      };
-    
-    case 'DISCONNECT':
-      return {
-        ...initialState,
-      };
-    
-    case 'UPDATE_BALANCE':
-      return {
-        ...state,
-        balance: action.payload,
-      };
-    
-    case 'UPDATE_NETWORK':
-      return {
-        ...state,
-        network: action.payload,
-      };
-    
+    case 'DISCONNECT_WALLET':
+      return { ...initialState };
+    case 'SET_ERROR':
+      return { ...state, error: action.payload, isConnecting: false };
     default:
       return state;
   }
 };
 
-// Define context type
-interface WalletContextType extends WalletState {
-  connectWallet: () => Promise<void>;
-  disconnectWallet: () => void;
-  switchNetwork: (networkId: number) => Promise<void>;
-}
-
-// Create context
-const WalletContext = createContext<WalletContextType | undefined>(undefined);
-
-// Create provider component
 export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(walletReducer, initialState);
 
-  // Check if wallet is connected on initial load
+  // Reconexión automática al cargar la app
   useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        // For MVP, we're just simulating wallet functions
-        // In production, this would use actual Web3 libraries and Core Wallet API
-        const connectedWallet = localStorage.getItem('wallet_connected');
-        
-        if (connectedWallet === 'true') {
-          const mockNetwork: Network = {
-            id: 43114,
-            name: 'Avalanche C-Chain',
-            isSupported: true,
-          };
+    const reconnectWallet = async () => {
+      const isConnected = localStorage.getItem('wallet_connected') === 'true';
+      if (isConnected) {
+        try {
+          dispatch({ type: 'CONNECT_WALLET' });
           
-          // Generar una dirección de billetera simulada
-          const mockAddress = `0x${Array.from({ length: 40 }, () => 
-            Math.floor(Math.random() * 16).toString(16)).join('')}`;
+          const provider = new ethers.providers.Web3Provider(
+            (window as any).avalanche || window.ethereum
+          );
+          const accounts = await provider.listAccounts();
           
-          dispatch({
-            type: 'CONNECT_SUCCESS',
-            payload: {
-              address: mockAddress,
-              balance: (Math.random() * 100).toFixed(2),
-              network: mockNetwork,
-            },
-          });
+          if (accounts.length > 0) {
+            const balance = await provider.getBalance(accounts[0]);
+            const network = await provider.getNetwork();
+            
+            dispatch({
+              type: 'SET_WALLET',
+              payload: {
+                address: accounts[0],
+                balance: ethers.utils.formatEther(balance),
+                network: {
+                  id: network.chainId,
+                  name: network.name,
+                  isSupported: [43114, 43113].includes(network.chainId)
+                }
+              }
+            });
+          }
+        } catch (error) {
+          dispatch({ type: 'SET_ERROR', payload: 'Error al reconectar' });
         }
-      } catch (error) {
-        console.error('Failed to check wallet connection:', error);
       }
     };
-    
-    checkConnection();
+
+    reconnectWallet();
   }, []);
 
-  // Connect wallet function - Simula conexión con Core Wallet
+  // Listeners para cambios en la wallet
+  useEffect(() => {
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts.length === 0) {
+        dispatch({ type: 'DISCONNECT_WALLET' });
+      } else {
+        dispatch({ type: 'SET_WALLET', payload: { ...state, address: accounts[0] } });
+      }
+    };
+
+    const handleChainChanged = (chainId: string) => {
+      window.location.reload();
+    };
+
+    const provider = (window as any).avalanche || window.ethereum;
+    if (provider) {
+      provider.on('accountsChanged', handleAccountsChanged);
+      provider.on('chainChanged', handleChainChanged);
+    }
+
+    return () => {
+      if (provider) {
+        provider.removeListener('accountsChanged', handleAccountsChanged);
+        provider.removeListener('chainChanged', handleChainChanged);
+      }
+    };
+  }, [state.address]);
+
   const connectWallet = async () => {
-    dispatch({ type: 'CONNECT_REQUEST' });
-    
     try {
-      // Simular conexión con Core Wallet
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      dispatch({ type: 'CONNECT_WALLET' });
       
-      // Generar una dirección de billetera aleatoria para simular
-      const randomAddress = `0x${Array.from({ length: 40 }, () => 
-        Math.floor(Math.random() * 16).toString(16)).join('')}`;
-      
-      // Simular balance aleatorio entre 1 y 100 AVAX
-      const randomBalance = (1 + Math.random() * 99).toFixed(2);
-      
-      // Red Avalanche C-Chain
-      const network: Network = {
-        id: 43114,
-        name: 'Avalanche C-Chain',
-        isSupported: true,
-      };
-      
-      localStorage.setItem('wallet_connected', 'true');
-      
-      dispatch({
-        type: 'CONNECT_SUCCESS',
-        payload: { 
-          address: randomAddress, 
-          balance: randomBalance, 
-          network 
-        },
-      });
-      
-      console.log('Core Wallet connected successfully');
-    } catch (error) {
-      dispatch({
-        type: 'CONNECT_FAILURE',
-        payload: 'Failed to connect Core Wallet',
-      });
-      console.error('Failed to connect Core Wallet:', error);
+      const isCoreWallet = !!(window as any).avalanche;
+
+      console.log('isCoreWallet', isCoreWallet);
+
+
+      const walletInfo = isCoreWallet 
+        ? await walletService.connectCoreWallet()
+        : await walletService.connectMetaMask();
+
+      console.log('walletInfo', walletInfo);
+
+      dispatch({ type: 'SET_WALLET', payload: walletInfo });
+    } catch (error: any) {
+      dispatch({ type: 'SET_ERROR', payload: error.message });
     }
   };
 
-  // Disconnect wallet function
   const disconnectWallet = () => {
-    localStorage.removeItem('wallet_connected');
-    dispatch({ type: 'DISCONNECT' });
-    console.log('Core Wallet disconnected');
+    walletService.disconnectWallet();
+    dispatch({ type: 'DISCONNECT_WALLET' });
   };
 
-  // Switch network function - For Avalanche networks
   const switchNetwork = async (networkId: number) => {
     try {
-      // Simulate network switch
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Mock network data - Only supporting Avalanche networks
-      let networkData: Network;
-      
-      switch (networkId) {
-        case 43114:
-          networkData = {
-            id: 43114,
-            name: 'Avalanche C-Chain',
-            isSupported: true,
-          };
-          break;
-        case 43113:
-          networkData = {
-            id: 43113,
-            name: 'Avalanche Fuji Testnet',
-            isSupported: true,
-          };
-          break;
-        default:
-          networkData = {
-            id: networkId,
-            name: 'Unknown Network',
-            isSupported: false,
-          };
-      }
-      
-      dispatch({ type: 'UPDATE_NETWORK', payload: networkData });
-      console.log(`Switched to network: ${networkData.name}`);
-    } catch (error) {
-      console.error('Failed to switch network:', error);
+      const network = await walletService.switchToAvalancheNetwork();
+      dispatch({ type: 'SET_WALLET', payload: { ...state, network } });
+    } catch (error: any) {
+      dispatch({ type: 'SET_ERROR', payload: error.message });
     }
   };
 
-  const value = {
-    ...state,
-    connectWallet,
-    disconnectWallet,
-    switchNetwork,
-  };
-
-  return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
+  return (
+    <WalletContext.Provider
+      value={{
+        ...state,
+        connectWallet,
+        disconnectWallet,
+        switchNetwork,
+      }}
+    >
+      {children}
+    </WalletContext.Provider>
+  );
 };
 
 export const useWalletContext = () => {
   const context = useContext(WalletContext);
-  
-  if (context === undefined) {
-    throw new Error('useWalletContext must be used within a WalletProvider');
+  if (!context) {
+    throw new Error('useWalletContext must be used within WalletProvider');
   }
-  
   return context;
 };

@@ -5,23 +5,27 @@ import { Network } from '../types';
 
 // Define AVALANCHE networks
 const AVALANCHE_NETWORKS = {
-  MAINNET: {
-    id: 43114,
-    name: 'Avalanche C-Chain',
-    hexId: '0xA86A', // 43114 in hex
-    rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
-    explorerUrl: 'https://snowtrace.io',
-    isSupported: true,
-  },
-  FUJI_TESTNET: {
-    id: 43113,
-    name: 'Avalanche Fuji Testnet',
-    hexId: '0xA869', // 43113 in hex
-    rpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
-    explorerUrl: 'https://testnet.snowtrace.io',
-    isSupported: true,
-  }
-};
+    MAINNET: {
+      id: 43114,
+      hexId: '0xA86A',
+      rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
+    },
+    FUJI: {
+      id: 43113,
+      hexId: '0xA869',
+      rpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
+    }
+  };
+
+  const getWalletProvider = (): WalletProvider => {
+    if (typeof (window as any).avalanche !== 'undefined') {
+      return (window as any).avalanche as WalletProvider;
+    }
+    if (typeof window.ethereum !== 'undefined') {
+      return window.ethereum as WalletProvider;
+    }
+    throw new Error('No wallet provider found');
+  };
 
 // Response type for balance
 interface BalanceResponse {
@@ -32,26 +36,30 @@ interface BalanceResponse {
   message?: string;
 }
 
+interface WalletProvider {
+    request: (args: { method: string; params?: any[] }) => Promise<any>;
+    on: (event: string, callback: (...args: any[]) => void) => void;
+    removeListener: (event: string, callback: (...args: any[]) => void) => void;
+    isAvalanche?: boolean;
+  }
+
 const walletService = {
   /**
    * Check if Core Wallet or MetaMask is installed
    */
   isWalletInstalled: (): boolean => {
-    return !!(window.avalanche || window.ethereum);
+    return !!(window.ethereum || window.avalanche);
   },
 
   /**
    * Connect to Core Wallet
    */
-  connectCoreWallet: async (): Promise<{ address: string; balance: string; network: Network }> => {
-    // eslint-disable-next-line no-useless-catch
+  connectCoreWallet: async () => {
     try {
-      if (!window.avalanche) {
-        throw new Error('Core Wallet not installed');
-      }
-
-      // Request accounts access
-      const accounts = await window.avalanche.request({
+      const provider = getWalletProvider();
+      
+      // Solicitar conexión
+      const accounts: string[] = await provider.request({
         method: 'eth_requestAccounts'
       });
 
@@ -59,52 +67,22 @@ const walletService = {
         throw new Error('No accounts found');
       }
 
-      const address = accounts[0];
-
-      // Initialize provider
-      const provider = new ethers.providers.Web3Provider(window.avalanche);
-      
-      // Get network
-      const networkInfo = await provider.getNetwork();
-      
-      // Get balance
-      const balance = await provider.getBalance(address);
-      const formattedBalance = ethers.utils.formatEther(balance);
-
-      // Determine network details
-      let network: Network;
-      if (networkInfo.chainId === AVALANCHE_NETWORKS.MAINNET.id) {
-        network = {
-          id: AVALANCHE_NETWORKS.MAINNET.id,
-          name: AVALANCHE_NETWORKS.MAINNET.name,
-          isSupported: true,
-        };
-      } else if (networkInfo.chainId === AVALANCHE_NETWORKS.FUJI_TESTNET.id) {
-        network = {
-          id: AVALANCHE_NETWORKS.FUJI_TESTNET.id,
-          name: AVALANCHE_NETWORKS.FUJI_TESTNET.name,
-          isSupported: true,
-        };
-      } else {
-        network = {
-          id: networkInfo.chainId,
-          name: networkInfo.name || 'Unknown Network',
-          isSupported: false,
-        };
-      }
-
-      // Set wallet connection state in local storage
-      localStorage.setItem('wallet_connected', 'true');
-      localStorage.setItem('wallet_address', address);
-      localStorage.setItem('wallet_network', JSON.stringify(network));
+      const ethersProvider = new ethers.providers.Web3Provider(provider);
+      const balance = await ethersProvider.getBalance(accounts[0]);
+      const network = await ethersProvider.getNetwork();
 
       return {
-        address,
-        balance: formattedBalance,
-        network,
+        address: accounts[0],
+        balance: ethers.utils.formatEther(balance),
+        network: {
+          id: network.chainId,
+          name: network.name,
+          isSupported: network.chainId === AVALANCHE_NETWORKS.MAINNET.id || 
+                     network.chainId === AVALANCHE_NETWORKS.FUJI.id
+        }
       };
     } catch (error) {
-      throw error;
+      throw new Error(error.message || 'Failed to connect Core Wallet');
     }
   },
 
